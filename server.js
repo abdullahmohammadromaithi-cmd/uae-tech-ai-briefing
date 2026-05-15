@@ -99,7 +99,7 @@ async function run() {
 async function claude(apiKey, useSearch, prompt) {
   const body = {
     model: "claude-haiku-4-5-20251001",
-    max_tokens: 512,
+    max_tokens: 2048,
     messages:   [{ role: "user", content: prompt }],
   };
   if (useSearch) body.tools = [{ type: "web_search_20250305", name: "web_search" }];
