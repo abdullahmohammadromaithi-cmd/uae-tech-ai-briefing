@@ -1,0 +1,16 @@
+{
+  "name": "uae-tech-ai-briefing",
+  "version": "1.0.0",
+  "description": "UAE Tech & AI Daily Briefing",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-cron": "^3.0.3"
+  }
+}

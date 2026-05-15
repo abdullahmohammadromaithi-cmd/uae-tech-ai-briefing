@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: uae-tech-ai-briefing
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
+    healthCheckPath: /api/status
