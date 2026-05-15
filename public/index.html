@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UAE Tech & AI Daily Briefing</title>
+<style>
+:root {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #21262d;
+  --border: rgba(255,255,255,0.08); --text: #e6edf3; --muted: #8b949e;
+  --blue: #388bfd; --blue-dim: rgba(56,139,253,0.12);
+  --green: #3fb950; --grn-dim: rgba(63,185,80,0.12);
+  --yellow: #d29922; --yel-dim: rgba(210,153,34,0.12);
+  --red: #f85149; --red-dim: rgba(248,81,73,0.12);
+  --teal: #39d0d8; --purple: #bc8cff; --r: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; font-size: 14px; line-height: 1.6; }
+a { color: var(--blue); text-decoration: none; }
+.shell { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+.sidebar { background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+.content { padding: 28px 36px; }
+.brand { padding: 20px 16px; border-bottom: 1px solid var(--border); }
+.brand h1 { font-size: 14px; font-weight: 600; line-height: 1.4; }
+.brand p { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.nav { padding: 10px 0; flex: 1; }
+.nav-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 8px 16px 4px; }
+.nav-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 16px; font-size: 13px; color: var(--muted); cursor: pointer; border-left: 2px solid transparent; transition: all .12s; }
+.nav-item:hover { color: var(--text); background: var(--bg3); }
+.nav-item.active { color: var(--blue); border-left-color: var(--blue); background: var(--blue-dim); }
+.badge { font-size: 10px; background: var(--bg3); color: var(--muted); padding: 1px 7px; border-radius: 20px; }
+.run-area { padding: 14px 16px; border-top: 1px solid var(--border); }
+.run-btn { width: 100%; padding: 9px; background: var(--blue); color: #fff; border: none; border-radius: var(--r); font-size: 13px; font-weight: 600; cursor: pointer; }
+.run-btn:disabled { opacity: .4; cursor: not-allowed; }
+.run-status { font-size: 11px; color: var(--muted); margin-top: 8px; text-align: center; line-height: 1.5; }
+.topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+.topbar h2 { font-size: 18px; font-weight: 600; }
+.pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill { font-size: 11px; background: var(--bg2); border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; border-radius: 20px; }
+.pill.ok  { border-color: rgba(63,185,80,.4); color: var(--green); background: var(--grn-dim); }
+.pill.err { border-color: rgba(248,81,73,.4); color: var(--red); background: var(--red-dim); }
+.stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 24px; }
+.stat { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 18px; }
+.stat-val { font-size: 26px; font-weight: 600; }
+.stat-lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.panel { display: none; }
+.panel.active { display: block; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 18px 20px; margin-bottom: 12px; }
+.headline { font-size: 20px; font-weight: 600; line-height: 1.4; margin-bottom: 12px; }
+.summary { font-size: 15px; line-height: 1.85; }
+.sentiment { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 12px; }
+.s-bullish { background: var(--grn-dim); color: var(--green); }
+.s-cautious { background: var(--yel-dim); color: var(--yellow); }
+.s-mixed { background: var(--blue-dim); color: var(--blue); }
+.s-neutral { background: var(--bg3); color: var(--muted); }
+.story-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.story-why { font-size: 13px; color: var(--muted); }
+.trend-card { border-left: 3px solid var(--blue); margin-bottom: 12px; }
+.trend-name { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+.trend-detail { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+.trend-uae { font-size: 12px; color: var(--teal); background: rgba(57,208,216,.08); padding: 6px 10px; border-radius: 6px; }
+.opp-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+.opp-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px; }
+.opp-val { font-size: 13px; margin-bottom: 8px; }
+.opp-action { background: var(--grn-dim); border: 1px solid rgba(63,185,80,.25); border-radius: 7px; padding: 10px 14px; margin-top: 10px; font-size: 13px; }
+.opp-action strong { color: var(--green); }
+.article-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.article { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.article:last-child { border-bottom: none; }
+.article-head { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 4px; }
+.cat { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; flex-shrink: 0; text-transform: uppercase; }
+.cat-uae_ai { background: var(--blue-dim); color: var(--blue); }
+.cat-uae_tech { background: var(--grn-dim); color: var(--green); }
+.cat-global_ai { background: rgba(188,140,255,.15); color: var(--purple); }
+.cat-gcc_tech { background: var(--yel-dim); color: var(--yellow); }
+.cat-policy { background: var(--red-dim); color: var(--red); }
+.article-title { font-size: 13px; font-weight: 500; flex: 1; }
+.article-meta { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+.article-sum { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.log-box { background: #0a0e14; border: 1px solid var(--border); border-radius: var(--r); padding: 16px; font-family: monospace; font-size: 12px; color: #7ee787; height: 400px; overflow-y: auto; white-space: pre-wrap; }
+.spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid rgba(255,255,255,.2); border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+.empty .icon { font-size: 40px; margin-bottom: 12px; }
+.empty h3 { font-size: 16px; color: var(--text); margin-bottom: 8px; }
+@media (max-width: 700px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; }
+  .content { padding: 16px; }
+  .stats { grid-template-columns: repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+  <div class="brand">
+    <div style="font-size:22px;margin-bottom:6px">🇦🇪</div>
+    <h1>UAE Tech & AI<br>Daily Briefing</h1>
+    <p id="brand-date">No briefing yet</p>
+  </div>
+  <nav class="nav">
+    <div class="nav-label">Today</div>
+    <div class="nav-item active" onclick="show('overview',this)">Overview</div>
+    <div class="nav-item" onclick="show('stories',this)">Top Stories <span class="badge" id="b-stories">0</span></div>
+    <div class="nav-item" onclick="show('trends',this)">Trends <span class="badge" id="b-trends">0</span></div>
+    <div class="nav-item" onclick="show('opportunities',this)">Opportunities <span class="badge" id="b-opps">0</span></div>
+    <div class="nav-label" style="margin-top:8px">Data</div>
+    <div class="nav-item" onclick="show('articles',this)">All Articles <span class="badge" id="b-articles">0</span></div>
+    <div class="nav-label" style="margin-top:8px">System</div>
+    <div class="nav-item" onclick="show('log',this)">Run Log</div>
+  </nav>
+  <div class="run-area">
+    <button class="run-btn" id="runBtn" onclick="runAgent()">&#9654; Run Now</button>
+    <div class="run-status" id="runStatus">Click to generate today's briefing</div>
+  </div>
+</aside>
+
+<main class="content">
+  <div class="topbar">
+    <h2>UAE Tech & AI Daily Briefing</h2>
+    <div class="pills">
+      <span class="pill" id="pillKey">Checking...</span>
+      <span class="pill" id="pillDate">No briefing</span>
+      <span class="pill" id="pillTime">—</span>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="s-articles">—</div><div class="stat-lbl">Articles</div></div>
+    <div class="stat"><div class="stat-val" id="s-trends">—</div><div class="stat-lbl">Trends</div></div>
+    <div class="stat"><div class="stat-val" id="s-opps">—</div><div class="stat-lbl">Opportunities</div></div>
+    <div class="stat"><div class="stat-val" id="s-stories">—</div><div class="stat-lbl">Top Stories</div></div>
+  </div>
+
+  <div class="panel active" id="panel-overview">
+    <div id="c-overview"><div class="empty"><div class="icon">🤖</div><h3>No briefing yet</h3><p>Click Run Now to generate today's UAE Tech and AI briefing. Takes about 2-3 minutes.</p></div></div>
+  </div>
+  <div class="panel" id="panel-stories">
+    <div id="c-stories"><div class="empty"><h3>Run the agent to see top stories</h3></div></div>
+  </div>
+  <div class="panel" id="panel-trends">
+    <div id="c-trends"><div class="empty"><h3>Run the agent to see trends</h3></div></div>
+  </div>
+  <div class="panel" id="panel-opportunities">
+    <div id="c-opps"><div class="empty"><h3>Run the agent to see opportunities</h3></div></div>
+  </div>
+  <div class="panel" id="panel-articles">
+    <div id="c-articles"><div class="empty"><h3>Run the agent to see all articles</h3></div></div>
+  </div>
+  <div class="panel" id="panel-log">
+    <div class="log-box" id="c-log">Waiting for a run...</div>
+  </div>
+</main>
+</div>
+
+<script>
+let polling = null;
+
+window.addEventListener("DOMContentLoaded", () => {
+  checkStatus();
+  fetchBriefing();
+  setInterval(checkStatus, 10000);
+});
+
+function show(id, el) {
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  document.getElementById("panel-" + id).classList.add("active");
+  if (el) el.classList.add("active");
+}
+
+async function checkStatus() {
+  try {
+    const s = await fetch("/api/status").then(r => r.json());
+    const kp = document.getElementById("pillKey");
+    kp.textContent = s.apiKeySet ? "API key ok" : "No API key";
+    kp.className   = "pill " + (s.apiKeySet ? "ok" : "err");
+    const btn = document.getElementById("runBtn");
+    const st  = document.getElementById("runStatus");
+    if (s.isRunning) {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Running...';
+      st.textContent = "Searching web and analysing — 2-3 minutes";
+      if (!polling) polling = setInterval(pollForResult, 8000);
+    } else {
+      btn.disabled = false;
+      btn.textContent = "Run Now";
+      st.textContent = s.lastError ? "Error: " + s.lastError : s.lastRunAt ? "Last run: " + s.lastRunAt.slice(0,16).replace("T"," ") : "Click to generate today's briefing";
+      if (polling) { clearInterval(polling); polling = null; }
+    }
+  } catch(_) {}
+}
+
+async function pollForResult() {
+  await checkStatus();
+  const s = await fetch("/api/status").then(r => r.json()).catch(() => ({}));
+  if (!s.isRunning && s.hasBriefing) { fetchBriefing(); fetchLog(); }
+}
+
+async function runAgent() {
+  const r = await fetch("/api/run", { method: "POST" });
+  const j = await r.json();
+  if (!r.ok) { alert(j.error); return; }
+  document.getElementById("runStatus").textContent = j.message;
+  checkStatus();
+  polling = setInterval(pollForResult, 8000);
+}
+
+async function fetchBriefing() {
+  const r = await fetch("/api/briefing");
+  if (!r.ok) return;
+  render(await r.json());
+}
+
+async function fetchLog() {
+  const r = await fetch("/api/log");
+  if (!r.ok) return;
+  const { log } = await r.json();
+  document.getElementById("c-log").textContent = log.join("\n");
+}
+
+function render(b) {
+  const a  = b.analysis  || {};
+  const ar = b.articles  || [];
+  const ts = a.top_stories   || [];
+  const tr = a.trends        || [];
+  const op = a.opportunities || [];
+
+  document.getElementById("pillDate").textContent   = b.date || "—";
+  document.getElementById("pillTime").textContent   = b.generatedAt ? new Date(b.generatedAt).toLocaleTimeString() : "—";
+  document.getElementById("brand-date").textContent = b.date || "";
+  document.getElementById("s-articles").textContent = ar.length;
+  document.getElementById("s-trends").textContent   = tr.length;
+  document.getElementById("s-opps").textContent     = op.length;
+  document.getElementById("s-stories").textContent  = ts.length;
+  document.getElementById("b-stories").textContent  = ts.length;
+  document.getElementById("b-trends").textContent   = tr.length;
+  document.getElementById("b-opps").textContent     = op.length;
+  document.getElementById("b-articles").textContent = ar.length;
+
+  const sc = { bullish:"s-bullish", cautious:"s-cautious", mixed:"s-mixed", neutral:"s-neutral" };
+  const sent = a.sentiment || "neutral";
+  document.getElementById("c-overview").innerHTML =
+    '<div class="card"><div class="headline">' + x(a.headline || "Today's UAE Tech & AI Briefing") + '</div>' +
+    '<div class="summary">' + x(a.summary || "") + '</div>' +
+    '<span class="sentiment ' + (sc[sent]||"s-neutral") + '">' + sent.toUpperCase() + '</span></div>' +
+    (a.global_watch ? '<div class="card"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Global Watch</div><div style="font-size:13px">' + x(a.global_watch) + '</div></div>' : "");
+
+  document.getElementById("c-stories").innerHTML = ts.length ? ts.map(s =>
+    '<div class="card"><div class="story-title">' + x(s.title||"") + '</div><div class="story-why">' + x(s.why_it_matters||"") + '</div></div>'
+  ).join("") : '<div class="empty"><h3>No stories</h3></div>';
+
+  document.getElementById("c-trends").innerHTML = tr.length ? tr.map(t =>
+    '<div class="card trend-card"><div class="trend-name">' + x(t.trend||"") + '</div>' +
+    '<div class="trend-detail">' + x(t.detail||"") + '</div>' +
+    (t.uae_angle ? '<div class="trend-uae">UAE: ' + x(t.uae_angle) + '</div>' : '') + '</div>'
+  ).join("") : '<div class="empty"><h3>No trends</h3></div>';
+
+  document.getElementById("c-opps").innerHTML = op.length ? op.map(o =>
+    '<div class="card"><div class="opp-title">' + x(o.title||"") + '</div>' +
+    '<div class="opp-lbl">Problem</div><div class="opp-val">' + x(o.problem||"") + '</div>' +
+    '<div class="opp-lbl">Approach</div><div class="opp-val">' + x(o.approach||"") + '</div>' +
+    '<div class="opp-lbl">Who should act</div><div class="opp-val">' + x(o.who||"") + '</div>' +
+    '<div class="opp-action"><strong>This week:</strong> ' + x(o.action||"") + '</div></div>'
+  ).join("") : '<div class="empty"><h3>No opportunities</h3></div>';
+
+  const cm = { uae_ai:"UAE AI", uae_tech:"UAE TECH", global_ai:"GLOBAL AI", gcc_tech:"GCC TECH", policy:"POLICY" };
+  document.getElementById("c-articles").innerHTML = ar.length ?
+    '<div class="article-wrap">' + ar.map(a =>
+      '<div class="article"><div class="article-head">' +
+      '<span class="cat cat-' + (a.category||"uae_tech") + '">' + (cm[a.category]||"NEWS") + '</span>' +
+      '<div class="article-title">' + x(a.title||"") + '</div></div>' +
+      '<div class="article-meta">' + x(a.source||"") + " · " + x(a.date||"") + (a.url ? ' · <a href="' + x(a.url) + '" target="_blank">link</a>' : "") + '</div>' +
+      '<div class="article-sum">' + x(a.summary||"") + '</div></div>'
+    ).join("") + '</div>'
+  : '<div class="empty"><h3>No articles</h3></div>';
+}
+
+function x(s) {
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+</script>
+</body>
+</html>
