@@ -48,7 +48,7 @@ async function run() {
 
     log("Step 1: Searching for UAE tech and AI news...");
     const newsRaw = await claude(key, true,
-      "Search the web for the 15 most important UAE technology and AI news stories from the last 7 days.\n\n" +
+      "Search the web for the 3 most important UAE technology and AI news stories from the last 7 days.\n\n" +
       "Include:\n" +
       "- UAE AI strategy and government announcements\n" +
       "- Companies: G42, e&, Presight, Careem, Noon, du, Etisalat\n" +
@@ -56,7 +56,7 @@ async function run() {
       "- Global AI news relevant to UAE\n" +
       "- GCC tech investment and startup news\n\n" +
       "Return a JSON array. Each object must have:\n" +
-      "  title, source, date (YYYY-MM-DD), url, summary (3-4 sentences), category (uae_ai | uae_tech | global_ai | gcc_tech | policy)\n\n" +
+      "  title, source, date (YYYY-MM-DD), url, summary (1-2 sentences), category (uae_ai | uae_tech | global_ai | gcc_tech | policy)\n\n" +
       "Return ONLY the JSON array. No markdown. No extra text."
     );
 
@@ -99,7 +99,7 @@ async function run() {
 async function claude(apiKey, useSearch, prompt) {
   const body = {
     model: "claude-haiku-4-5-20251001",
-    max_tokens: 4096,
+    max_tokens: 512,
     messages:   [{ role: "user", content: prompt }],
   };
   if (useSearch) body.tools = [{ type: "web_search_20250305", name: "web_search" }];
